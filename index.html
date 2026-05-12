@@ -179,6 +179,7 @@ html, body {
 }
 .add-buttons {
   display: flex;
+  align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
@@ -1057,7 +1058,6 @@ tr.total-row td.cell-input {
   position: fixed;
   inset: 0;
   background: linear-gradient(135deg, var(--bg) 0%, var(--primary-soft) 100%);
-  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1065,7 +1065,7 @@ tr.total-row td.cell-input {
 }
 .gate-card {
   background: var(--card);
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 40px 36px;
   box-shadow: 0 20px 50px rgba(74, 123, 200, 0.15);
   max-width: 400px;
@@ -1227,11 +1227,7 @@ body.gate-locked { overflow: hidden; }
       <div class="add-buttons">
         <button class="add-btn primary" data-action="add-membership">+ 회원권</button>
         <button class="add-btn primary" data-action="add-package">+ 패키지</button>
-        <span class="add-btn-divider"></span>
-        <button class="add-btn" data-action="add-course-15">+ 15차시</button>
-        <button class="add-btn" data-action="add-course-30">+ 30차시</button>
-        <button class="add-btn" data-action="add-course-60">+ 60차시</button>
-        <button class="add-btn" data-action="add-course-short">+ 단기차시</button>
+        <button class="add-btn" data-action="add-course-15">+ 단체연수</button>
         <span class="add-btn-divider"></span>
         <button class="add-btn gift" data-action="gift-add">+ 사은품</button>
       </div>
@@ -1278,6 +1274,7 @@ const PACKAGES = [
   { id: 'p4', name: '패키지 (Chat GPT 3개월)',       price: 170000, externals: { 'Chat GPT 3개월': 149700 } },
   { id: 'p5', name: '패키지 (Chat GPT 2개월)',       price: 130000, externals: { 'Chat GPT 2개월': 99800 } },
   { id: 'p6', name: '패키지 (다했니 12개월)',         price: 119000, externals: { '다했니 12개월': 66000 } },
+  { id: 'p7', name: '패키지 (ZEPQuiz 3개월)',          price: 140000, externals: { 'ZEPQuiz 3개월': 0 } }, // ⚠️ ZEPQuiz 외부 배분 금액 확인 후 0 → 실제 금액으로 변경 필요
 ];
 
 // ───── STATE ─────
