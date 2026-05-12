@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학교맞춤 예산견적 문의</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --bg: #F5F9FF;
+  --bg-warm: #EFF5FC;
+  --card: #FFFFFF;
+  --ink: #2D3748;
+  --ink-1: #4A5568;
+  --ink-2: #A0AEC0;
+  --line: #E2E8F0;
+  --line-soft: #F0F4F8;
+  --primary: #6F9FE0;
+  --primary-soft: #E1ECF8;
+  --primary-deep: #4A7BC8;
+  --positive: #6BB69C;
+  --positive-soft: #DCF0E5;
+  --warning: #E0A040;
+  --warning-soft: #FFF1D8;
+  --danger: #E07F7F;
+  --danger-soft: #FCE5E5;
+  --neutral-input: #F0F4F8;
+}
+html, body {
+  margin: 0; padding: 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-feature-settings: 'tnum' on;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.app { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
+
+/* ───── HEADER ───── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.title-block {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.title-text {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.title-text:hover { color: var(--primary-deep); }
+.title-text:hover span { color: var(--primary-deep); }
+.title-text span { color: var(--primary); }
+.title-sub {
+  font-size: 12px;
+  color: var(--ink-2);
+  letter-spacing: -0.01em;
+}
+
+/* ───── BUDGET STRIP ───── */
+.budget-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+@media (max-width: 720px) {
+  .budget-strip { grid-template-columns: 1fr; }
+  .budget-cell { border-right: 0 !important; border-bottom: 1px solid var(--line); }
+}
+.budget-cell {
+  padding: 14px 18px;
+  border-right: 1px solid var(--line);
+  min-width: 0;
+}
+.budget-cell:last-child { border-right: 0; }
+.budget-cell-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+.budget-cell-input {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+}
+.budget-cell-input input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  background: transparent;
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.02em;
+}
+.budget-cell-input input::placeholder {
+  color: #D7CFC0;
+  font-weight: 700;
+}
+.budget-cell-input .suffix {
+  font-size: 14px;
+  color: var(--ink-2);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.budget-cell.highlight {
+  background: linear-gradient(135deg, #B8D4F1 0%, #6F9FE0 100%);
+  color: #fff;
+}
+.budget-cell.highlight .budget-cell-label { color: rgba(255,255,255,0.7); }
+.budget-cell.highlight .auto-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  font-feature-settings: 'tnum';
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.budget-cell.highlight .auto-meta {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 2px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ───── MAIN TABLE ───── */
+.table-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+.table-card-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.add-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.add-btn {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink-1);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 7px;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.add-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.add-btn.primary {
+  background: var(--primary-soft);
+  border-color: var(--primary-soft);
+  color: var(--primary-deep);
+}
+.add-btn.primary:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.add-btn.gift {
+  background: var(--danger-soft);
+  border-color: var(--danger-soft);
+  color: var(--danger);
+}
+.add-btn.gift:hover {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+.add-btn-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+  display: inline-block;
+  align-self: center;
+}
+
+.q-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  table-layout: fixed;
+}
+.q-table colgroup .col-product { width: auto; }
+.q-table colgroup .col-discount { width: 80px; }
+.q-table colgroup .col-price { width: 110px; }
+.q-table colgroup .col-headcount { width: 70px; }
+.q-table colgroup .col-result { width: 140px; }
+.q-table colgroup .col-margin { width: 140px; }
+.q-table colgroup .col-del { width: 40px; }
+.q-table thead th {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-2);
+  padding: 10px 14px;
+  text-align: right;
+  letter-spacing: -0.01em;
+  background: var(--line-soft);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.q-table thead th:first-child { text-align: left; }
+.q-table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: middle;
+  font-feature-settings: 'tnum';
+}
+.q-table tbody tr:last-child td { border-bottom: 0; }
+.q-table tbody tr:hover { background: var(--line-soft); }
+
+/* row label */
+.q-table td.row-label {
+  text-align: left;
+  min-width: 220px;
+}
+.row-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.row-tags {
+  display: flex;
+  gap: 5px;
+  margin-top: 3px;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+}
+.tag.list { background: var(--neutral-input); color: var(--ink-2); }
+.tag.ext { background: var(--positive-soft); color: var(--positive); }
+.tag.partner { background: var(--warning-soft); color: var(--warning); }
+
+/* row select for memberships */
+.row-select {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  padding: 0;
+  cursor: pointer;
+  outline: 0;
+  appearance: none;
+}
+
+/* input cells */
+.q-table td.cell-input {
+  width: 110px;
+  text-align: right;
+}
+.q-table td.cell-input.small { width: 75px; }
+.q-table td.cell-input.discount { width: 85px; }
+.q-table td.cell-input.discount input {
+  background: var(--positive-soft);
+  font-weight: 700;
+  padding-right: 24px;
+}
+.q-table td.cell-input.discount input:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--positive);
+}
+.q-table td.cell-input.discount .input-suffix {
+  position: relative;
+  display: block;
+}
+.q-table td.cell-input.discount .input-suffix .suffix {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--ink-2);
+  font-weight: 700;
+  pointer-events: none;
+}
+.q-table td.cell-input input {
+  width: 100%;
+  padding: 8px 11px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  border: 0;
+  border-radius: 7px;
+  background: var(--neutral-input);
+  color: var(--ink);
+  font-feature-settings: 'tnum';
+  outline: 0;
+  transition: background 0.12s, box-shadow 0.12s;
+}
+.q-table td.cell-input input:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+.q-table td.cell-input.price input {
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+  font-size: 14px;
+  font-weight: 800;
+}
+.q-table td.cell-input.price input:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.q-table td.cell-result {
+  width: 130px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 14px;
+}
+.q-table td.cell-margin {
+  width: 100px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 13px;
+  font-feature-settings: 'tnum';
+}
+.cell-margin.pos { color: var(--positive); }
+.cell-margin.neg { color: var(--danger); }
+
+.q-table td.cell-del {
+  width: 30px;
+  padding: 0 6px;
+  text-align: center;
+}
+
+/* row-chips inside product cell */
+.row-chips {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+  margin: 2px 4px 2px 0;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  font-feature-settings: 'tnum';
+}
+.chip.chip-ours {
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+}
+.chip.chip-ext {
+  background: var(--positive-soft);
+  color: var(--positive);
+}
+.chip.chip-partner {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+.chip.chip-gift {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* prevent wrapping in result/margin cells */
+.q-table td.cell-result,
+.q-table td.cell-margin {
+  white-space: nowrap;
+}
+
+/* row badge */
+.kind-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 6px;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.kind-badge.course { background: var(--primary-soft); color: var(--primary-deep); }
+.kind-badge.membership { background: var(--positive-soft); color: var(--positive); }
+.kind-badge.package { background: var(--warning-soft); color: var(--warning); }
+.kind-badge.gift { background: var(--danger-soft); color: var(--danger); }
+
+/* 사은품 행 */
+tr.gift-tr td {
+  background: #FFF8F8;
+}
+tr.gift-tr:hover td { background: #FFF0F0; }
+tr.gift-tr td.cell-input.gift-price input {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+tr.gift-tr td.cell-input.gift-price input:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--danger);
+}
+tr.gift-tr td.gift-amount {
+  color: var(--danger);
+}
+tr.gift-tr .gift-name-input {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+tr.gift-tr .gift-name-input:focus {
+  outline: none;
+  border-color: var(--danger);
+  background: #fff;
+}
+tr.gift-tr .gift-toggle {
+  border: 1px solid var(--line);
+  background: var(--bg-warm);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  color: var(--ink-1);
+  width: 100%;
+}
+tr.gift-tr .gift-toggle.per-person {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary-soft);
+}
+tr.gift-tr td .dot {
+  color: var(--ink-2);
+  opacity: 0.4;
+  font-size: 14px;
+}
+
+.row-name-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+.row-name-line .row-select {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-list-note {
+  font-size: 11px;
+  color: var(--ink-2);
+  margin-top: 3px;
+  font-weight: 500;
+}
+.del-btn {
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+.del-btn:hover { background: var(--danger-soft); color: var(--danger); }
+
+/* total row */
+tr.total-row td {
+  background: var(--primary-soft);
+  border-top: 2px solid var(--primary);
+  border-bottom: 0;
+  padding: 14px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+tr.total-row td.row-label {
+  font-weight: 800;
+  color: var(--ink);
+}
+tr.total-row td.cell-result {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary-deep);
+  white-space: nowrap;
+  background: var(--primary-soft) !important;
+}
+tr.total-row td.cell-margin {
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+  background: var(--positive-soft) !important;
+}
+tr.total-row td.cell-margin.pos { color: var(--positive); }
+tr.total-row td.cell-margin.neg { color: var(--danger); background: var(--danger-soft) !important; }
+tr.total-row td.cell-input {
+  text-align: right;
+  font-weight: 800;
+  color: var(--ink-1);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.budget-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 5px;
+  margin-left: 8px;
+  letter-spacing: -0.01em;
+  vertical-align: middle;
+  font-feature-settings: 'tnum';
+}
+.budget-badge.ok { background: var(--positive-soft); color: var(--positive); }
+.budget-badge.under { background: var(--warning-soft); color: var(--warning); }
+.budget-badge.over { background: var(--danger-soft); color: var(--danger); }
+
+.total-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-right: 4px;
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+  vertical-align: middle;
+}
+.total-tag.margin {
+  background: var(--positive-soft);
+  color: var(--positive);
+}
+
+.total-cell-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  margin-bottom: 1px;
+  text-align: right;
+}
+.total-cell-value {
+  font-size: 16px;
+  font-weight: 800;
+  text-align: right;
+  font-feature-settings: 'tnum';
+  white-space: nowrap;
+}
+
+/* ───── BOTTOM ───── */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.bottom-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.bottom-card-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.kpi-grid-2 .kpi {
+  padding: 18px 18px;
+}
+.kpi-grid-2 .kpi-value {
+  font-size: 24px;
+}
+.kpi {
+  padding: 12px 14px;
+  background: var(--bg);
+  border-radius: 9px;
+}
+.kpi-label {
+  font-size: 10px;
+  color: var(--ink-2);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+}
+.kpi-value {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.01em;
+}
+.kpi-value.pos { color: var(--positive); }
+.kpi-value.neg { color: var(--danger); }
+
+.progress-block {
+  margin-top: 8px;
+}
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.progress-label {
+  font-size: 12px;
+  color: var(--ink-1);
+  font-weight: 600;
+}
+.progress-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  font-feature-settings: 'tnum';
+}
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.25s;
+}
+.progress-bar-fill.over { background: var(--danger); }
+.progress-bar-fill.full { background: var(--positive); }
+
+/* tip box */
+.tip {
+  padding: 12px 14px;
+  border-radius: 9px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  border-left: 3px solid;
+}
+.tip:last-child { margin-bottom: 0; }
+.tip.diff-over {
+  background: var(--danger-soft);
+  border-left-color: var(--danger);
+  color: var(--ink);
+}
+.tip.diff-under {
+  background: var(--warning-soft);
+  border-left-color: var(--warning);
+  color: var(--ink);
+}
+.tip.diff-ok {
+  background: var(--positive-soft);
+  border-left-color: var(--positive);
+  color: var(--ink);
+}
+.tip.diff-suggest {
+  background: var(--bg);
+  border-left-color: var(--ink-2);
+  color: var(--ink);
+}
+.tip.diff-warn {
+  background: var(--danger-soft);
+  border-left-color: var(--danger);
+  color: var(--ink);
+}
+.tip-headline {
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.tip-headline strong {
+  font-weight: 800;
+  font-feature-settings: 'tnum';
+}
+.tip-detail {
+  font-size: 12px;
+  color: var(--ink-1);
+  line-height: 1.5;
+  font-feature-settings: 'tnum';
+}
+.tip-detail strong {
+  color: var(--ink);
+  font-weight: 800;
+}
+.tip-list {
+  font-size: 12px;
+  color: var(--ink-1);
+  margin: 4px 0 0;
+  padding-left: 16px;
+}
+.tip-list li { margin-top: 2px; }
+/* combination suggestion blocks */
+.combo-block {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.combo-block:last-child { margin-bottom: 0; }
+.combo-block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.combo-block-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.combo-block-meta {
+  font-size: 11px;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.combo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.combo-item {
+  background: var(--bg-warm);
+  border-radius: 8px;
+  padding: 9px 12px;
+  border-left: 3px solid var(--primary);
+  cursor: pointer;
+  transition: background 0.12s, transform 0.08s, box-shadow 0.12s;
+  user-select: none;
+}
+.combo-item:hover {
+  background: var(--primary-soft);
+  box-shadow: 0 2px 8px rgba(111, 159, 224, 0.18);
+  transform: translateY(-1px);
+}
+.combo-item:active {
+  transform: translateY(0);
+}
+.combo-item-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.combo-item-main .combo-price {
+  color: var(--primary-deep);
+  font-weight: 800;
+  font-feature-settings: 'tnum';
+}
+.combo-item-main .combo-count {
+  color: var(--ink);
+  font-weight: 800;
+  font-feature-settings: 'tnum';
+}
+.combo-item-main .combo-x,
+.combo-item-main .combo-plus {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.combo-tag {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.combo-tag.single { background: var(--positive-soft); color: var(--positive); }
+.combo-tag.tier1 { background: var(--primary-soft); color: var(--primary-deep); }
+.combo-tag.tier2 { background: var(--warning-soft); color: var(--warning); }
+.combo-tag.tier3 { background: var(--line-soft); color: var(--ink-1); }
+
+.head-diff {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 4px;
+  background: var(--bg);
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+.head-diff.exact {
+  background: var(--positive-soft);
+  color: var(--positive);
+}
+.combo-item-meta {
+  font-size: 11px;
+  color: var(--ink-2);
+  margin-top: 4px;
+  font-feature-settings: 'tnum';
+}
+.combo-margin {
+  color: var(--positive);
+  font-weight: 700;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: 30px 16px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.empty-tip-ico {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+/* gifts */
+.gifts-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+}
+.gifts-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.gifts-panel-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.gifts-panel-title-meta {
+  font-size: 11px;
+  color: var(--ink-2);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-left: 8px;
+}
+
+/* gifts inline (inside quote table card) */
+.gifts-inline {
+  border-top: 1px solid var(--line-soft);
+  padding: 14px 20px 16px;
+  background: var(--bg-warm);
+}
+.gifts-inline-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.gifts-inline-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.gifts-inline-meta {
+  font-size: 11px;
+  color: var(--ink-2);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-left: 6px;
+}
+.gifts-add-btn {
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 7px;
+  cursor: pointer;
+  color: var(--ink-1);
+  letter-spacing: -0.01em;
+}
+.gifts-add-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.gift-row {
+  display: grid;
+  grid-template-columns: 1fr 130px 90px 30px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.gift-row:last-child { margin-bottom: 0; }
+.gift-row input {
+  width: 100%;
+  padding: 8px 11px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border: 0;
+  border-radius: 7px;
+  background: var(--neutral-input);
+  color: var(--ink);
+  outline: 0;
+}
+.gift-row input[type="text"]:not([data-action="gift-price"]) {
+  text-align: left;
+}
+.gift-row input[data-action="gift-price"] {
+  text-align: right;
+  font-feature-settings: 'tnum';
+  font-weight: 700;
+}
+.gift-row input:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+.gift-row .input-suffix { position: relative; }
+.gift-row .input-suffix input { padding-right: 28px; }
+.gift-row .input-suffix .suffix {
+  position: absolute;
+  right: 11px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--ink-2);
+  pointer-events: none;
+  font-weight: 600;
+}
+.gift-toggle {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 7px;
+  padding: 8px 0;
+  cursor: pointer;
+  color: var(--ink-1);
+}
+.gift-toggle.per-person {
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+  border-color: var(--primary-soft);
+}
+.gift-add-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 8px;
+  border: 1px dashed var(--line);
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-1);
+  border-radius: 7px;
+  cursor: pointer;
+}
+.gift-add-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+.gifts-empty {
+  text-align: center;
+  padding: 18px 12px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+/* utility */
+.muted { color: var(--ink-2); font-weight: 500; }
+
+/* ───── PASSWORD GATE ───── */
+.gate-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, var(--bg) 0%, var(--primary-soft) 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.gate-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 40px 36px;
+  box-shadow: 0 20px 50px rgba(74, 123, 200, 0.15);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+.gate-icon { font-size: 40px; margin-bottom: 16px; display: inline-block; }
+.gate-title { font-size: 18px; font-weight: 700; color: var(--ink); margin: 0 0 6px; }
+.gate-sub { font-size: 13px; color: var(--ink-2); margin: 0 0 24px; }
+.gate-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--neutral-input);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.gate-input:focus { border-color: var(--primary); background: #fff; }
+.gate-error { font-size: 13px; color: var(--danger); min-height: 18px; margin: 10px 0 12px; font-weight: 500; }
+.gate-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.05s;
+}
+.gate-btn:hover { background: var(--primary-deep); }
+.gate-btn:active { transform: translateY(1px); }
+.gate-shake { animation: gateShake 0.4s ease; }
+@keyframes gateShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.gate-hidden { display: none !important; }
+body.gate-locked { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗
+     ║  비밀번호 게이트 (현재 비밀번호: iscream2026!)                ║
+     ║                                                                ║
+     ║  ▶ 비밀번호 변경 방법                                          ║
+     ║  1. 브라우저에서 F12 → Console 탭 열기                         ║
+     ║  2. 아래 한 줄을 그대로 붙여넣고 '새비밀번호' 부분만 바꿔서 실행  ║
+     ║                                                                ║
+     ║     (async()=>{const b=new TextEncoder().encode('새비밀번호');  ║
+     ║     const a=await crypto.subtle.digest('SHA-256',b);            ║
+     ║     console.log(Array.from(new Uint8Array(a)).map(x=>x          ║
+     ║     .toString(16).padStart(2,'0')).join(''));})()               ║
+     ║                                                                ║
+     ║  3. 출력된 64자리 해시값을 아래 PASSWORD_HASH 에 붙여넣기        ║
+     ║  4. 파일 저장 후 GitHub에 재업로드                              ║
+     ╚══════════════════════════════════════════════════════════════╝ -->
+<div id="gate" class="gate-overlay">
+  <div class="gate-card" id="gateCard">
+    <div class="gate-icon">🔒</div>
+    <h1 class="gate-title">학교맞춤 예산견적 문의</h1>
+    <p class="gate-sub">접속을 위해 비밀번호를 입력해 주세요</p>
+    <input type="password" id="gatePw" class="gate-input" placeholder="비밀번호" autocomplete="off">
+    <div class="gate-error" id="gateErr"></div>
+    <button class="gate-btn" id="gateBtn">확인</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // 'iscream2026!' 의 SHA-256 해시값
+  const PASSWORD_HASH = '2e8a713e9654bc146e6983ae9f6a2e1ca01986d6c4dcbbd7e2aece7d27314d72';
+  const SESSION_KEY = 'budget_calc_auth_v1';
+
+  const gate = document.getElementById('gate');
+
+  // 이미 인증된 세션이면 게이트 즉시 숨김
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    gate.classList.add('gate-hidden');
+    return;
+  }
+
+  document.body.classList.add('gate-locked');
+  const card  = document.getElementById('gateCard');
+  const input = document.getElementById('gatePw');
+  const err   = document.getElementById('gateErr');
+  const btn   = document.getElementById('gateBtn');
+
+  async function sha256(text){
+    const buf = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function tryUnlock(){
+    const val = input.value;
+    if (!val) { err.textContent = '비밀번호를 입력해 주세요'; return; }
+    const hash = await sha256(val);
+    if (hash === PASSWORD_HASH) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      gate.classList.add('gate-hidden');
+      document.body.classList.remove('gate-locked');
+    } else {
+      err.textContent = '비밀번호가 일치하지 않습니다';
+      card.classList.remove('gate-shake');
+      void card.offsetWidth;
+      card.classList.add('gate-shake');
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); }
+    else { err.textContent = ''; }
+  });
+
+  setTimeout(() => input.focus(), 100);
+})();
+</script>
+
+<div class="app">
+  <div class="header">
+    <div class="title-block">
+      <a class="title-text" href="https://t-scream.i-scream.co.kr/master/manage/alliance/view.do?alliSeqNo=463" target="_blank" rel="noopener">학교맞춤 <span>예산견적 문의</span></a>
+      <div class="title-sub">학교 단체 상담용</div>
+    </div>
+  </div>
+
+  <div class="budget-strip">
+    <div class="budget-cell">
+      <div class="budget-cell-label">예산 총액</div>
+      <div class="budget-cell-input">
+        <input type="text" inputmode="numeric" placeholder="2,300,000" value="" data-action="budget">
+        <span class="suffix">원</span>
+      </div>
+    </div>
+    <div class="budget-cell">
+      <div class="budget-cell-label">총 인원</div>
+      <div class="budget-cell-input">
+        <input type="text" inputmode="numeric" placeholder="48" value="" data-action="headcount">
+        <span class="suffix">명</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-card-head">
+      <div class="table-card-title">견적 항목</div>
+      <div class="add-buttons">
+        <button class="add-btn primary" data-action="add-membership">+ 회원권</button>
+        <button class="add-btn primary" data-action="add-package">+ 패키지</button>
+        <span class="add-btn-divider"></span>
+        <button class="add-btn" data-action="add-course-15">+ 15차시</button>
+        <button class="add-btn" data-action="add-course-30">+ 30차시</button>
+        <button class="add-btn" data-action="add-course-60">+ 60차시</button>
+        <button class="add-btn" data-action="add-course-short">+ 단기차시</button>
+        <span class="add-btn-divider"></span>
+        <button class="add-btn gift" data-action="gift-add">+ 사은품</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="q-table" id="mainTable"></table>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="bottom-card">
+      <div class="bottom-card-title">예산 맞추기 도움</div>
+      <div id="tips"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ───── DATA ─────
+const STANDARD_PRICES = {
+  3: 15000, 4: 20000, 5: 25000, 6: 30000, 7: 35000, 8: 40000,
+  15: 50000, 30: 85000, 60: 140000
+};
+// 제휴사 정산 공식: 정가 × 50% × 45% = 정가 × 22.5% (모든 차시 동일 적용)
+const PARTNER_RATE = 0.5 * 0.45;
+const COURSE_HOURS = [3, 4, 5, 6, 7, 8, 15, 30, 60]; // dropdown 순서
+
+const MEMBERSHIPS = [
+  { id: 'm1', name: '회원권 (2학점 + 띵커벨 + 클래스툴)', price: 120000, externals: { '띵커벨': 20000, '클래스툴': 20000 }, partner: 19125 },
+  { id: 'm2', name: '회원권 (2학점 + 클래스툴)',         price: 85000,  externals: { '클래스툴': 20000 }, partner: 19125 },
+  { id: 'm3', name: '회원권 (2학점 + 띵커벨)',           price: 85000,  externals: { '띵커벨': 20000 }, partner: 19125 },
+  { id: 'm4', name: '회원권 (4학점 + 띵커벨 + 클래스툴)', price: 170000, externals: { '띵커벨': 20000, '클래스툴': 20000 }, partner: 31500 },
+  { id: 'm5', name: '회원권 (4학점 + 클래스툴)',         price: 140000, externals: { '클래스툴': 20000 }, partner: 31500 },
+  { id: 'm6', name: '회원권 (4학점 + 띵커벨)',           price: 140000, externals: { '띵커벨': 20000 }, partner: 31500 },
+  { id: 'm7', name: '회원권 (2학점 + 킨더보드 3개월)',    price: 85000,  externals: { '킨더보드 3개월': 38700 }, partner: 19125 },
+  { id: 'm8', name: '회원권 (4학점 + 킨더보드 5개월)',    price: 140000, externals: { '킨더보드 5개월': 64500 }, partner: 31500 },
+  { id: 'm9', name: '회원권 (2학점 + issamGPT 3개월)',    price: 140000, externals: { 'issamGPT 3개월': 66000 }, partner: 19125 },
+  { id: 'm10', name: '회원권 (4학점 + issamGPT 3개월)',   price: 170000, externals: { 'issamGPT 3개월': 66000 }, partner: 31500 },
+];
+const PACKAGES = [
+  { id: 'p1', name: '패키지 (Speek 12개월)',         price: 175000, externals: { 'Speek 12개월': 112000 } },
+  { id: 'p2', name: '패키지 (교보문고 Sam 12개월)',  price: 80000,  externals: { '교보문고 Sam 12개월': 39000 } },
+  { id: 'p3', name: '패키지 (Gemini 3개월)',         price: 159000, externals: { 'Gemini 3개월': 112000 } },
+  { id: 'p4', name: '패키지 (Chat GPT 3개월)',       price: 170000, externals: { 'Chat GPT 3개월': 149700 } },
+  { id: 'p5', name: '패키지 (Chat GPT 2개월)',       price: 130000, externals: { 'Chat GPT 2개월': 99800 } },
+  { id: 'p6', name: '패키지 (다했니 12개월)',         price: 119000, externals: { '다했니 12개월': 66000 } },
+];
+
+// ───── STATE ─────
+let _id = 0; const nid = () => ++_id;
+
+// row 종류:
+//   course: { kind:'course', hours, price, headcount }
+//   membership: { kind:'membership', productId, price, headcount }  (price = customer-paying)
+//   package: { kind:'package', productId, price, headcount }
+let state = {
+  budget: 0,
+  headcount: 0,
+  rows: [
+    { id: nid(), kind: 'course', hours: 15, price: 50000, headcount: 0 },
+  ],
+  gifts: [],
+};
+
+// ───── HELPERS ─────
+const fmt = (n) => Math.round(n).toLocaleString('ko-KR');
+const fmtNum = (n) => (!n || n === 0) ? '' : Math.round(n).toLocaleString('ko-KR');
+const pct1 = (n) => {
+  const r = Math.round(n * 10) / 10;
+  return (Number.isInteger(r) ? r.toFixed(0) : r.toFixed(1)) + '%';
+};
+
+function sumExternals(externals) {
+  if (!externals) return 0;
+  return Object.values(externals).reduce((s, v) => s + (Number(v) || 0), 0);
+}
+
+function getRowMeta(row) {
+  if (row.kind === 'course') {
+    const list = STANDARD_PRICES[row.hours] || 0;
+    return {
+      name: courseLabel(row.hours),
+      list,
+      ext: 0,
+      externals: null,
+      partner: Math.round(list * PARTNER_RATE),
+    };
+  }
+  if (row.kind === 'membership') {
+    const m = MEMBERSHIPS.find(x => x.id === row.productId);
+    return {
+      name: m?.name || '',
+      list: m?.price || 0,
+      ext: sumExternals(m?.externals),
+      externals: m?.externals || null,
+      partner: m?.partner || 0,
+      product: m,
+    };
+  }
+  if (row.kind === 'package') {
+    const p = PACKAGES.find(x => x.id === row.productId);
+    return {
+      name: p?.name || '',
+      list: p?.price || 0,
+      ext: sumExternals(p?.externals),
+      externals: p?.externals || null,
+      partner: 0,
+      product: p,
+    };
+  }
+  return { name: '', list: 0, ext: 0, externals: null, partner: 0 };
+}
+
+function courseLabel(hours) {
+  const credit = hours === 15 ? ' (1학점)' : hours === 30 ? ' (2학점)' : hours === 60 ? ' (4학점)' : '';
+  return `${hours}차시${credit}`;
+}
+
+function calcRow(row) {
+  const meta = getRowMeta(row);
+  const subtotal = row.price * row.headcount;
+  const marginPerHead = row.price - meta.ext - meta.partner;
+  const marginTotal = marginPerHead * row.headcount;
+  return { ...meta, subtotal, marginPerHead, marginTotal };
+}
+
+function calc() {
+  let total = 0, totalHeadcount = 0, totalMargin = 0, totalListBase = 0;
+  for (const row of state.rows) {
+    const c = calcRow(row);
+    total += c.subtotal;
+    totalHeadcount += row.headcount;
+    totalMargin += c.marginTotal;
+    totalListBase += c.list * row.headcount;
+  }
+  // 사은품 원가 차감 (마진에서)
+  const giftsTotal = state.gifts.reduce((sum, g) => {
+    const qty = g.perPerson ? totalHeadcount : 1;
+    return sum + (Number(g.price) || 0) * qty;
+  }, 0);
+  totalMargin -= giftsTotal;
+  const targetDiff = state.budget > 0 ? state.budget - total : 0;
+  return { total, totalHeadcount, totalMargin, totalListBase, targetDiff, giftsTotal };
+}
+
+// 조합 클릭 시 견적 행에 적용
+function applyCombo(data) {
+  const { rowId, priceA, countA, priceB, countB } = data;
+  const idx = state.rows.findIndex(r => r.id === rowId);
+  if (idx === -1) return;
+  const original = state.rows[idx];
+
+  // 원본 행을 첫 번째 가격으로 수정
+  original.price = priceA;
+  original.headcount = countA;
+
+  // 두 번째 행을 같은 상품 정보로 복제해서 다음에 삽입
+  const second = { ...original, id: nid(), price: priceB, headcount: countB };
+  state.rows.splice(idx + 1, 0, second);
+
+  render();
+  // 적용된 행으로 부드럽게 스크롤
+  setTimeout(() => {
+    const targetRow = document.querySelector(`tr[data-row-id="${original.id}"]`);
+    if (targetRow) targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 50);
+}
+
+// ───── RENDER ─────
+function captureFocus() {
+  const a = document.activeElement;
+  if (!a || !a.dataset || !a.dataset.action) return null;
+  const tr = a.closest('tr[data-row-id]');
+  const gr = a.closest('[data-gift-id]');
+  return {
+    action: a.dataset.action,
+    rowId: tr?.dataset.rowId,
+    giftId: gr?.dataset.giftId,
+    selStart: a.selectionStart,
+    selEnd: a.selectionEnd,
+  };
+}
+function restoreFocus(f) {
+  if (!f) return;
+  let scope = document;
+  if (f.rowId) scope = document.querySelector(`tr[data-row-id="${f.rowId}"]`) || document;
+  else if (f.giftId) scope = document.querySelector(`[data-gift-id="${f.giftId}"]`) || document;
+  const el = scope.querySelector(`[data-action="${f.action}"]`);
+  if (el && el.focus) {
+    el.focus();
+    if (typeof el.setSelectionRange === 'function') {
+      try { el.setSelectionRange(f.selStart || 0, f.selEnd || 0); } catch(e) {}
+    }
+  }
+}
+
+function render() {
+  const f = captureFocus();
+  renderTable();
+  renderTips();
+  bindEvents();
+  restoreFocus(f);
+}
+
+function renderGifts() {
+  const t = calc();
+  const countEl = document.getElementById('giftsCount');
+  const listEl = document.getElementById('giftsList');
+  if (!countEl || !listEl) return;
+
+  if (state.gifts.length === 0) {
+    countEl.textContent = '없음';
+    listEl.innerHTML = '';
+    return;
+  }
+
+  countEl.textContent = `${state.gifts.length}건 · 원가 ${fmt(t.giftsTotal)}원`;
+  listEl.innerHTML = state.gifts.map(g => `
+    <div class="gift-row" data-gift-id="${g.id}">
+      <input type="text" placeholder="사은품명 (예: 다이어리)" value="${g.name||''}" data-action="gift-name">
+      <div class="input-suffix">
+        <input type="text" inputmode="numeric" placeholder="0" value="${fmtNum(g.price)}" data-action="gift-price">
+        <span class="suffix">원</span>
+      </div>
+      <button class="gift-toggle ${g.perPerson ? 'per-person' : ''}" data-action="gift-toggle">
+        ${g.perPerson ? '인원당' : '단체'}
+      </button>
+      <button class="del-btn" data-action="gift-del" title="삭제">×</button>
+    </div>
+  `).join('');
+}
+
+function renderBudgetAuto() {
+  const el = document.getElementById('perHeadDisplay');
+  if (state.budget > 0 && state.headcount > 0) {
+    const ph = state.budget / state.headcount;
+    el.innerHTML = `
+      <div class="auto-value">${fmt(ph)}원</div>
+      <div class="auto-meta">${fmt(state.budget)}원 ÷ ${state.headcount}명</div>
+    `;
+  } else {
+    el.innerHTML = `
+      <div class="auto-value">— 원</div>
+      <div class="auto-meta">예산·인원 입력 시 표시</div>
+    `;
+  }
+}
+
+function renderTable() {
+  const t = calc();
+  const giftPerHead = state.gifts.reduce((sum, g) => {
+    if (g.perPerson) return sum + (Number(g.price) || 0);
+    return sum;
+  }, 0);
+  const groupGiftTotal = state.gifts.reduce((sum, g) => {
+    if (!g.perPerson) return sum + (Number(g.price) || 0);
+    return sum;
+  }, 0);
+
+  // 예산 차액 (있을 때만 표시)
+  let budgetBadge = '';
+  if (state.budget > 0) {
+    const diff = state.budget - t.total;
+    if (Math.abs(diff) < 1) {
+      budgetBadge = `<span class="budget-badge ok">예산 일치 ✓</span>`;
+    } else if (diff > 0) {
+      budgetBadge = `<span class="budget-badge under">예산 ${fmt(diff)} 부족</span>`;
+    } else {
+      budgetBadge = `<span class="budget-badge over">예산 ${fmt(-diff)} 초과</span>`;
+    }
+  }
+
+  const html = `
+    <colgroup>
+      <col class="col-product">
+      <col class="col-discount">
+      <col class="col-price">
+      <col class="col-headcount">
+      <col class="col-result">
+      <col class="col-margin">
+      <col class="col-del">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>상품 / 차감 분해</th>
+        <th>할인</th>
+        <th>결제/인</th>
+        <th>인원</th>
+        <th>결제 합계</th>
+        <th>마진/인</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      ${state.rows.map(row => renderRow(row, giftPerHead, groupGiftTotal)).join('')}
+      ${state.gifts.map(g => renderGiftRow(g)).join('')}
+      <tr class="total-row">
+        <td class="row-label">총계 ${budgetBadge}</td>
+        <td class="cell-input"></td>
+        <td class="cell-input"></td>
+        <td class="cell-input">${fmt(t.totalHeadcount)}명</td>
+        <td class="cell-result"><div class="total-cell-label">결제</div><div class="total-cell-value">${fmt(t.total)}원</div></td>
+        <td class="cell-margin ${t.totalMargin<0?'neg':'pos'}"><div class="total-cell-label">마진</div><div class="total-cell-value">${fmt(t.totalMargin)}원</div></td>
+        <td class="cell-del"></td>
+      </tr>
+    </tbody>
+  `;
+  document.getElementById('mainTable').innerHTML = html;
+}
+
+function renderGiftRow(g) {
+  const totalHeads = state.rows.reduce((s, r) => s + r.headcount, 0);
+  const giftTotal = g.perPerson ? (Number(g.price) || 0) * totalHeads : (Number(g.price) || 0);
+  const marginImpact = g.perPerson
+    ? -(Number(g.price) || 0)
+    : (totalHeads > 0 ? -(Number(g.price) || 0) / totalHeads : 0);
+
+  return `
+    <tr class="gift-tr" data-gift-id="${g.id}">
+      <td class="row-label">
+        <div class="row-name-line">
+          <span class="kind-badge gift">사은품</span>
+          <input type="text" class="row-select gift-name-input" placeholder="사은품명 (예: 다이어리)" value="${g.name||''}" data-action="gift-name">
+        </div>
+      </td>
+      <td class="cell-input"><span class="dot">·</span></td>
+      <td class="cell-input price gift-price">
+        <input type="text" inputmode="numeric" value="${fmtNum(g.price)}" data-action="gift-price" placeholder="0">
+      </td>
+      <td class="cell-input small">
+        <button class="gift-toggle ${g.perPerson ? 'per-person' : ''}" data-action="gift-toggle">
+          ${g.perPerson ? '인원당' : '단체'}
+        </button>
+      </td>
+      <td class="cell-result gift-amount">${giftTotal > 0 ? '-' + fmt(giftTotal) : '0원'}</td>
+      <td class="cell-margin neg">${marginImpact !== 0 ? fmt(marginImpact) + '원' : '0원'}</td>
+      <td class="cell-del"><button class="del-btn" data-action="gift-del" title="삭제">×</button></td>
+    </tr>
+  `;
+}
+
+// 외부 서비스를 표 컬럼으로 매핑하는 키워드
+const EXT_COLUMN_KEYS = ['띵커벨', '클래스툴', 'issamGPT', '킨더보드'];
+
+function splitExternalsByColumn(externals) {
+  // 결과: { 띵커벨, 클래스툴, issamGPT, 킨더보드, 기타 }
+  const out = { '띵커벨': 0, '클래스툴': 0, 'issamGPT': 0, '킨더보드': 0, '기타': 0 };
+  if (!externals) return out;
+  for (const [name, amount] of Object.entries(externals)) {
+    let matched = false;
+    for (const key of EXT_COLUMN_KEYS) {
+      if (name.includes(key)) {
+        out[key] += Number(amount) || 0;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) out['기타'] += Number(amount) || 0;
+  }
+  return out;
+}
+
+function renderRow(row, giftPerHead, groupGiftTotal) {
+  const c = calcRow(row);
+
+  // 엑셀 정의: 연수원 = 결제 - 외부서비스 (제휴사 빼지 않음)
+  const oursPerHead = row.price - c.ext;
+
+  // 단체 사은품을 인원수로 균등 분배
+  const totalAllHeads = state.rows.reduce((s, r) => s + r.headcount, 0);
+  const groupGiftPerHead = totalAllHeads > 0 ? groupGiftTotal / totalAllHeads : 0;
+  const giftPerHeadTotal = giftPerHead + groupGiftPerHead;
+
+  // 엑셀 정의: 마진 = 연수원 - 제휴사 - 사은품
+  const marginPerHead = oursPerHead - c.partner - giftPerHeadTotal;
+
+  let nameEl;
+  let badge = '';
+  if (row.kind === 'course') {
+    badge = '<span class="kind-badge course">연수</span>';
+    const opts = COURSE_HOURS.map(h => `<option value="${h}" ${row.hours===h?'selected':''}>${courseLabel(h)}</option>`).join('');
+    nameEl = `<select class="row-select" data-action="row-hours">${opts}</select>`;
+  } else if (row.kind === 'membership') {
+    badge = '<span class="kind-badge membership">회원권</span>';
+    const opts = MEMBERSHIPS.map(m => `<option value="${m.id}" ${row.productId===m.id?'selected':''}>${m.name}</option>`).join('');
+    nameEl = `<select class="row-select" data-action="row-mid">${opts}</select>`;
+  } else {
+    badge = '<span class="kind-badge package">패키지</span>';
+    const opts = PACKAGES.map(p => `<option value="${p.id}" ${row.productId===p.id?'selected':''}>${p.name}</option>`).join('');
+    nameEl = `<select class="row-select" data-action="row-pid">${opts}</select>`;
+  }
+
+  // 할인%
+  let discountStr = '';
+  if (c.list > 0 && row.price < c.list) {
+    const pct = (c.list - row.price) / c.list * 100;
+    const rounded = Math.round(pct * 10) / 10;
+    discountStr = (rounded % 1 === 0) ? String(rounded.toFixed(0)) : rounded.toFixed(1);
+  }
+
+  // 정가 노트
+  const listNote = c.list !== row.price && c.list > 0
+    ? `<div class="row-list-note">정가 ${fmt(c.list)}</div>` : '';
+
+  // 차감 분해 칩 만들기 — 그 상품에 해당하는 항목만
+  const chips = [];
+  // 연수원 몫
+  chips.push(`<span class="chip chip-ours">연수원 ${fmt(oursPerHead)}</span>`);
+  // 외부 서비스 (있는 것만)
+  if (c.externals) {
+    for (const [name, amount] of Object.entries(c.externals)) {
+      chips.push(`<span class="chip chip-ext">${name} ${fmt(amount)}</span>`);
+    }
+  }
+  // 제휴사 (있을 때만)
+  if (c.partner > 0) {
+    chips.push(`<span class="chip chip-partner">제휴사 ${fmt(c.partner)}</span>`);
+  }
+  // 사은품 (있을 때만)
+  if (giftPerHeadTotal > 0) {
+    chips.push(`<span class="chip chip-gift">사은품 ${fmt(giftPerHeadTotal)}</span>`);
+  }
+
+  return `
+    <tr data-row-id="${row.id}">
+      <td class="row-label">
+        <div class="row-name-line">${badge}${nameEl}</div>
+        ${listNote}
+        <div class="row-chips">${chips.join('')}</div>
+      </td>
+      <td class="cell-input discount">
+        <div class="input-suffix">
+          <input type="text" inputmode="decimal" value="${discountStr}" data-action="row-discount" placeholder="0">
+          <span class="suffix">%</span>
+        </div>
+      </td>
+      <td class="cell-input price">
+        <input type="text" inputmode="numeric" value="${fmtNum(row.price)}" data-action="row-price">
+      </td>
+      <td class="cell-input small">
+        <input type="text" inputmode="numeric" value="${fmtNum(row.headcount)}" data-action="row-hc" placeholder="0">
+      </td>
+      <td class="cell-result">${fmt(c.subtotal)}원</td>
+      <td class="cell-margin ${marginPerHead<0?'neg':'pos'}">${fmt(marginPerHead)}원</td>
+      <td class="cell-del"><button class="del-btn" data-action="row-del" title="삭제">×</button></td>
+    </tr>
+  `;
+}
+
+function renderKPIs() {
+  const t = calc();
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi-grid kpi-grid-2">
+      <div class="kpi">
+        <div class="kpi-label">결제 합계</div>
+        <div class="kpi-value">${fmt(t.total)}원</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">우리 마진</div>
+        <div class="kpi-value ${t.totalMargin<0?'neg':'pos'}">${fmt(t.totalMargin)}원</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderTips() {
+  const t = calc();
+  const el = document.getElementById('tips');
+
+  if (state.budget <= 0) {
+    el.innerHTML = `
+      <div class="empty-tip">
+        <div class="empty-tip-ico">
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="26" r="14" fill="#FFF1D8" stroke="#E0A040" stroke-width="2"/>
+            <path d="M26 42v3M38 42v3M28 49h8" stroke="#E0A040" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M32 19v8M28 23h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        예산을 입력하면<br>딱 떨어지는 단가 조합을 제안해 드려요.
+      </div>
+    `;
+    return;
+  }
+
+  if (state.headcount <= 0) {
+    el.innerHTML = `
+      <div class="empty-tip">
+        <div class="empty-tip-ico">
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+            <rect x="16" y="10" width="32" height="44" rx="4" fill="#E1ECF8" stroke="#6F9FE0" stroke-width="2"/>
+            <path d="M24 22h16M24 30h16M24 38h10" stroke="#6F9FE0" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        총 인원을 입력해 주세요.
+      </div>
+    `;
+    return;
+  }
+
+  // 견적 행이 없으면 안내
+  const productRows = state.rows;
+  if (productRows.length === 0) {
+    el.innerHTML = `
+      <div class="empty-tip">
+        견적 항목을 먼저 추가해 주세요.
+      </div>
+    `;
+    return;
+  }
+
+  // 같은 상품(같은 차시 또는 같은 productId)은 한 번만 제안
+  const seenKey = new Set();
+  const uniqueRows = [];
+  for (const row of productRows) {
+    let key;
+    if (row.kind === 'course') key = `course:${row.hours}`;
+    else key = `${row.kind}:${row.productId}`;
+    if (seenKey.has(key)) continue;
+    seenKey.add(key);
+    uniqueRows.push(row);
+  }
+
+  // 각 견적 행마다 단가 조합 후보 생성
+  const blocks = [];
+  for (const row of uniqueRows) {
+    const block = buildPriceCombinations(row);
+    if (block) blocks.push(block);
+  }
+
+  if (blocks.length === 0) {
+    el.innerHTML = `
+      <div class="empty-tip">조합을 생성할 수 없어요.</div>
+    `;
+    return;
+  }
+
+  el.innerHTML = blocks.join('');
+}
+
+// 한 견적 행에 대해 예산 + 인원에 맞는 단가 조합 후보들을 생성
+function buildPriceCombinations(row) {
+  const meta = getRowMeta(row);
+  const list = meta.list;
+  if (!list || list <= 0) return null;
+
+  const budget = state.budget;
+  const targetTotal = state.headcount;
+  if (budget <= 0 || targetTotal <= 0) return null;
+
+  const candidates = [];
+
+  // 만원/5천원/천원 단위
+  const units = [
+    { v: 10000, label: '만원', tier: 'tier1' },
+    { v: 5000, label: '5천원', tier: 'tier2' },
+    { v: 1000, label: '천원', tier: 'tier3' },
+  ];
+
+  // ─── 두 가격 조합 ───
+  const aPrices = [];
+  for (let p = 10000; p <= list; p += 10000) aPrices.push(p);
+
+  for (const A of aPrices) {
+    for (const u of units) {
+      const minN = Math.max(1, targetTotal - 8);
+      const maxN = targetTotal + 8;
+      for (let totalN = minN; totalN <= maxN; totalN++) {
+        for (let Acount = 1; Acount < totalN; Acount++) {
+          const Bcount = totalN - Acount;
+          const remaining = budget - A * Acount;
+          if (remaining <= 0) continue;
+          const Bexact = remaining / Bcount;
+          if (Bexact <= 0 || Bexact > list) continue;
+          if (Math.abs(Bexact - A) < 1) continue;
+          const Bround = Math.round(Bexact / u.v) * u.v;
+          if (Bround <= 0 || Bround > list) continue;
+          if (Bround === A) continue;
+          const sum = A * Acount + Bround * Bcount;
+          const diff = budget - sum;
+          if (Math.abs(diff) <= u.v / 2) {
+            candidates.push({
+              kind: 'two',
+              priceA: A, countA: Acount,
+              priceB: Bround, countB: Bcount,
+              sum, diff,
+              unit: u.v, unitLabel: u.label, tier: u.tier,
+              totalCount: totalN,
+            });
+          }
+        }
+      }
+    }
+  }
+
+  // 중복 제거
+  const seen = new Set();
+  const unique = [];
+  for (const c of candidates) {
+    const a = c.priceA <= c.priceB ? c : { ...c, priceA: c.priceB, priceB: c.priceA, countA: c.countB, countB: c.countA };
+    const key = `t:${a.priceA}:${a.countA}:${a.priceB}:${a.countB}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(c);
+  }
+
+  // 정렬
+  unique.sort((a, b) => {
+    const da = Math.abs(a.totalCount - targetTotal);
+    const db = Math.abs(b.totalCount - targetTotal);
+    if (da !== db) return da - db;
+    if (a.unit !== b.unit) return b.unit - a.unit;
+    return Math.abs(a.diff) - Math.abs(b.diff);
+  });
+
+  const top = unique.slice(0, 6);
+  if (top.length === 0) return null;
+
+  return `
+    <div class="combo-block">
+      <div class="combo-block-head">
+        <span class="combo-block-name">${meta.name}</span>
+        <span class="combo-block-meta">정가 ${fmt(list)}원 · 예산 ${fmt(budget)}원 / ${targetTotal}명 · 클릭하면 적용됩니다</span>
+      </div>
+      <div class="combo-list">
+        ${top.map((c, i) => renderCombo(c, row, meta, targetTotal, budget, i)).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderCombo(c, row, meta, targetTotal, budget, idx) {
+  const giftPerHead = state.gifts.reduce((s, g) => {
+    return s + (g.perPerson ? (Number(g.price) || 0) : (targetTotal > 0 ? (Number(g.price) || 0) / targetTotal : 0));
+  }, 0);
+
+  const headDiff = c.totalCount - targetTotal;
+  let headDiffTag = '';
+  if (headDiff !== 0) {
+    headDiffTag = `<span class="head-diff">총 ${c.totalCount}명 (${headDiff > 0 ? '+' : ''}${headDiff})</span>`;
+  } else {
+    headDiffTag = `<span class="head-diff exact">총 ${c.totalCount}명 ✓</span>`;
+  }
+
+  let diffNote = '';
+  if (Math.abs(c.diff) < 1) {
+    diffNote = '예산 일치 ✓';
+  } else if (c.diff > 0) {
+    diffNote = `예산 ${fmt(c.diff)}원 부족`;
+  } else {
+    diffNote = `예산 ${fmt(-c.diff)}원 초과`;
+  }
+
+  const discountA = meta.list > 0 ? (1 - c.priceA / meta.list) * 100 : 0;
+  const discountB = meta.list > 0 ? (1 - c.priceB / meta.list) * 100 : 0;
+  const marginA = (c.priceA - meta.ext - meta.partner - giftPerHead) * c.countA;
+  const marginB = (c.priceB - meta.ext - meta.partner - giftPerHead) * c.countB;
+  const totalMargin = marginA + marginB;
+
+  // 조합 데이터를 data-attribute로 인코딩 (클릭 시 적용)
+  const comboData = JSON.stringify({
+    rowId: row.id,
+    priceA: c.priceA, countA: c.countA,
+    priceB: c.priceB, countB: c.countB,
+  }).replace(/"/g, '&quot;');
+
+  return `
+    <div class="combo-item" data-action="apply-combo" data-combo="${comboData}" role="button" tabindex="0">
+      <div class="combo-item-main">
+        <strong class="combo-count">${c.countA}명</strong>
+        <span class="combo-x">×</span>
+        <strong class="combo-price">${fmt(c.priceA)}</strong>
+        <span class="combo-plus">+</span>
+        <strong class="combo-count">${c.countB}명</strong>
+        <span class="combo-x">×</span>
+        <strong class="combo-price">${fmt(c.priceB)}</strong>
+        <span class="combo-tag ${c.tier}">${c.unitLabel} 단위</span>
+        ${headDiffTag}
+      </div>
+      <div class="combo-item-meta">
+        할인 ${pct1(discountA)} / ${pct1(discountB)} · 합계 ${fmt(c.sum)}원 · ${diffNote} · 마진 <span class="combo-margin">${fmt(totalMargin)}원</span>
+      </div>
+    </div>
+  `;
+}
+
+// ───── EVENTS ─────
+function attachAmount(el, setValue) {
+  el.oninput = () => {
+    const cleaned = el.value.replace(/[^\d]/g, '');
+    const num = cleaned === '' ? 0 : Number(cleaned);
+    setValue(num);
+    el.value = cleaned === '' ? '' : Number(cleaned).toLocaleString('ko-KR');
+    render();
+  };
+}
+function attachInt(el, setValue, min = 0) {
+  el.oninput = () => {
+    const cleaned = el.value.replace(/[^\d]/g, '');
+    let n = cleaned === '' ? min : Number(cleaned);
+    if (n < min) n = min;
+    setValue(n);
+    el.value = String(n);
+    render();
+  };
+}
+function findRow(el) {
+  const tr = el.closest('tr[data-row-id]');
+  if (!tr) return null;
+  return state.rows.find(x => x.id === Number(tr.dataset.rowId));
+}
+
+function bindEvents() {
+  document.querySelectorAll('[data-action]').forEach(el => {
+    const action = el.dataset.action;
+
+    if (action === 'budget') attachAmount(el, n => state.budget = n);
+    else if (action === 'headcount') attachInt(el, n => state.headcount = n, 0);
+
+    else if (action === 'add-course-short') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 5, price: 25000, headcount: 0 }); render(); };
+    else if (action === 'add-course-15') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 15, price: 50000, headcount: 0 }); render(); };
+    else if (action === 'add-course-30') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 30, price: 85000, headcount: 0 }); render(); };
+    else if (action === 'add-course-60') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 60, price: 140000, headcount: 0 }); render(); };
+    else if (action === 'add-membership') el.onclick = () => { const m = MEMBERSHIPS[0]; state.rows.push({ id: nid(), kind: 'membership', productId: m.id, price: m.price, headcount: 0 }); render(); };
+    else if (action === 'add-package') el.onclick = () => { const p = PACKAGES[0]; state.rows.push({ id: nid(), kind: 'package', productId: p.id, price: p.price, headcount: 0 }); render(); };
+
+    else if (action === 'row-hours') {
+      const row = findRow(el);
+      if (!row) return;
+      el.onchange = () => {
+        const newH = Number(el.value);
+        const oldStandard = STANDARD_PRICES[row.hours];
+        row.hours = newH;
+        if (row.price === oldStandard) row.price = STANDARD_PRICES[newH] || row.price;
+        render();
+      };
+    }
+    else if (action === 'row-mid') {
+      const row = findRow(el);
+      if (!row) return;
+      el.onchange = () => {
+        const oldM = MEMBERSHIPS.find(x => x.id === row.productId);
+        const newM = MEMBERSHIPS.find(x => x.id === el.value);
+        row.productId = el.value;
+        if (oldM && newM && row.price === oldM.price) row.price = newM.price;
+        render();
+      };
+    }
+    else if (action === 'row-pid') {
+      const row = findRow(el);
+      if (!row) return;
+      el.onchange = () => {
+        const oldP = PACKAGES.find(x => x.id === row.productId);
+        const newP = PACKAGES.find(x => x.id === el.value);
+        row.productId = el.value;
+        if (oldP && newP && row.price === oldP.price) row.price = newP.price;
+        render();
+      };
+    }
+    else if (action === 'row-price') {
+      const row = findRow(el);
+      if (row) attachAmount(el, n => row.price = n);
+    }
+    else if (action === 'row-discount') {
+      const row = findRow(el);
+      if (!row) return;
+      el.oninput = () => {
+        // 숫자와 . 만 허용
+        let v = el.value.replace(/[^\d.]/g, '');
+        // . 은 한 번만
+        const firstDot = v.indexOf('.');
+        if (firstDot !== -1) {
+          v = v.slice(0, firstDot + 1) + v.slice(firstDot + 1).replace(/\./g, '');
+        }
+        const num = (v === '' || v === '.') ? 0 : Number(v);
+        const meta = getRowMeta(row);
+        // 할인 % → price 역산
+        let newPrice = Math.round(meta.list * (1 - num / 100));
+        if (newPrice < 0) newPrice = 0;
+        row.price = newPrice;
+        el.value = v;
+        render();
+      };
+    }
+    else if (action === 'row-hc') {
+      const row = findRow(el);
+      if (row) attachInt(el, n => row.headcount = n, 0);
+    }
+    else if (action === 'row-del') {
+      el.onclick = () => {
+        const row = findRow(el);
+        if (row) state.rows = state.rows.filter(x => x.id !== row.id);
+        render();
+      };
+    }
+
+    // 조합 클릭 → 견적 항목에 적용
+    else if (action === 'apply-combo') {
+      el.onclick = () => {
+        try {
+          const data = JSON.parse(el.dataset.combo.replace(/&quot;/g, '"'));
+          applyCombo(data);
+        } catch (e) { console.error(e); }
+      };
+    }
+
+    // 사은품
+    else if (action === 'gift-add') {
+      el.onclick = () => {
+        state.gifts.push({ id: nid(), name: '', price: 0, perPerson: true });
+        render();
+      };
+    }
+    else if (action === 'gift-name') {
+      el.oninput = () => {
+        const id = Number(el.closest('[data-gift-id]').dataset.giftId);
+        const g = state.gifts.find(x => x.id === id);
+        if (g) g.name = el.value;
+      };
+    }
+    else if (action === 'gift-price') {
+      const id = Number(el.closest('[data-gift-id]').dataset.giftId);
+      const g = state.gifts.find(x => x.id === id);
+      if (g) attachAmount(el, n => g.price = n);
+    }
+    else if (action === 'gift-toggle') {
+      el.onclick = () => {
+        const id = Number(el.closest('[data-gift-id]').dataset.giftId);
+        const g = state.gifts.find(x => x.id === id);
+        if (g) g.perPerson = !g.perPerson;
+        render();
+      };
+    }
+    else if (action === 'gift-del') {
+      el.onclick = () => {
+        const id = Number(el.closest('[data-gift-id]').dataset.giftId);
+        state.gifts = state.gifts.filter(x => x.id !== id);
+        render();
+      };
+    }
+  });
+}
+
+render();
+</script>
+</body>
+</html>
