@@ -1113,6 +1113,8 @@ tr.total-row td.cell-input {
 }
 .gate-hidden { display: none !important; }
 body.gate-locked { overflow: hidden; }
+body.gate-locked .app { display: none !important; }
+body.gate-locked > *:not(.gate-overlay):not(script) { display: none !important; }
 </style>
 </head>
 <body>
