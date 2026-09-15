@@ -1063,6 +1063,18 @@ tr.total-row td.cell-input {
 .pkg-chip:hover { border-color: var(--pri); background: var(--pri-soft); color: var(--pri-deep); }
 .pkg-chip .pkg-chip-price { color: var(--ink3); font-weight: 500; margin-left: 4px; font-size: 11px; }
 
+/* 행 내 차시 칩 */
+.crs-chip-wrap { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.crs-chip {
+  font-family: inherit; font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: 99px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink2);
+  cursor: pointer; transition: border-color .12s, background .12s, color .12s;
+  white-space: nowrap;
+}
+.crs-chip:hover { border-color: var(--pri); background: var(--pri-soft); color: var(--pri-deep); }
+.crs-chip.active { background: var(--pri); border-color: var(--pri); color: #fff; }
+
 </style>
 </head>
 <body>
@@ -1117,7 +1129,7 @@ tr.total-row td.cell-input {
       <div class="add-buttons">
         <button class="add-btn primary" id="memToggleBtn" data-action="toggle-membership-drop">+ 회원권</button>
         <button class="add-btn primary" id="pkgToggleBtn" data-action="toggle-package-drop">+ 패키지</button>
-        <button class="add-btn" data-action="add-course-15">+ 단체연수</button>
+        <button class="add-btn" id="crsToggleBtn" data-action="toggle-course-drop">+ 단체연수</button>
         <span class="add-btn-divider"></span>
         <button class="add-btn gift" data-action="gift-add">+ 사은품</button>
       </div>
@@ -1129,6 +1141,10 @@ tr.total-row td.cell-input {
     <div class="pkg-drop" id="pkgDrop">
       <div class="pkg-drop-label">추가할 패키지를 선택하세요</div>
       <div class="pkg-chip-list" id="pkgChipList"></div>
+    </div>
+    <div class="pkg-drop" id="crsDrop">
+      <div class="pkg-drop-label">추가할 차시를 선택하세요</div>
+      <div class="pkg-chip-list" id="crsChipList"></div>
     </div>
     <div style="overflow-x:auto;">
       <table class="q-table" id="mainTable"></table>
@@ -1559,8 +1575,10 @@ function renderRow(row, giftPerHead, groupGiftTotal) {
   let badge = '';
   if (row.kind === 'course') {
     badge = '<span class="kind-badge course">연수</span>';
-    const opts = COURSE_HOURS.map(h => `<option value="${h}" ${row.hours===h?'selected':''}>${courseLabel(h)}</option>`).join('');
-    nameEl = `<select class="row-select" data-action="row-hours">${opts}</select>`;
+    const crsChips = COURSE_HOURS.map(h =>
+      `<button class="crs-chip ${row.hours===h?'active':''}" data-action="row-hours" data-hours="${h}">${courseLabel(h)}</button>`
+    ).join('');
+    nameEl = `<div class="crs-chip-wrap">${crsChips}</div>`;
   } else if (row.kind === 'membership') {
     badge = '<span class="kind-badge membership">회원권</span>';
     const opts = MEMBERSHIPS.map(m => `<option value="${m.id}" ${row.productId===m.id?'selected':''}>${m.name}</option>`).join('');
@@ -1915,13 +1933,24 @@ function bindEvents() {
       const drop = document.getElementById('pkgDrop');
       const isOpen = drop.classList.toggle('open');
       el.textContent = isOpen ? '▲ 패키지' : '+ 패키지';
+      ['memDrop','crsDrop'].forEach(id => document.getElementById(id)?.classList.remove('open'));
+      const mb = document.getElementById('memToggleBtn'); if (mb) mb.textContent = '+ 회원권';
+      const cb = document.getElementById('crsToggleBtn'); if (cb) cb.textContent = '+ 단체연수';
+    };
+    else if (action === 'toggle-course-drop') el.onclick = () => {
+      const drop = document.getElementById('crsDrop');
+      const isOpen = drop.classList.toggle('open');
+      el.textContent = isOpen ? '▲ 단체연수' : '+ 단체연수';
+      ['memDrop','pkgDrop'].forEach(id => document.getElementById(id)?.classList.remove('open'));
+      const mb = document.getElementById('memToggleBtn'); if (mb) mb.textContent = '+ 회원권';
+      const pb = document.getElementById('pkgToggleBtn'); if (pb) pb.textContent = '+ 패키지';
     };
 
     else if (action === 'row-hours') {
       const row = findRow(el);
       if (!row) return;
-      el.onchange = () => {
-        const newH = Number(el.value);
+      el.onclick = () => {
+        const newH = Number(el.dataset.hours);
         const oldStandard = STANDARD_PRICES[row.hours];
         row.hours = newH;
         if (row.price === oldStandard) row.price = STANDARD_PRICES[newH] || row.price;
@@ -2053,6 +2082,23 @@ render();
         render();
       };
       memList.appendChild(btn);
+    });
+  }
+  // 단체연수 칩
+  const crsList = document.getElementById('crsChipList');
+  if (crsList) {
+    COURSE_HOURS.forEach(h => {
+      const btn = document.createElement('button');
+      btn.className = 'pkg-chip';
+      btn.innerHTML = `${courseLabel(h)}<span class="pkg-chip-price">&nbsp;${fmt(STANDARD_PRICES[h])}원</span>`;
+      btn.onclick = () => {
+        state.rows.push({ id: nid(), kind: 'course', hours: h, price: STANDARD_PRICES[h], headcount: 0 });
+        document.getElementById('crsDrop').classList.remove('open');
+        const tb = document.getElementById('crsToggleBtn');
+        if (tb) tb.textContent = '+ 단체연수';
+        render();
+      };
+      crsList.appendChild(btn);
     });
   }
   // 패키지 칩
