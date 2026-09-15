@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,40 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>학교맞춤 예산견적 문의</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 :root {
-  --bg: #fafaf9;
-  --bg-warm: #f5f5f4;
-  --card: #FFFFFF;
-  --ink: #1c1917;
-  --ink-1: #57534e;
-  --ink-2: #a8a29e;
-  --line: #e7e5e4;
-  --line-soft: #f5f5f4;
-  --primary: #b794f4;
-  --primary-soft: #faf5ff;
-  --primary-deep: #9061d2;
-  --positive: #9DD1B8;
-  --positive-soft: #E8F4EE;
-  --warning: #E8C088;
-  --warning-soft: #FBEFD9;
-  --danger: #E89A9A;
-  --danger-soft: #F9E0E0;
-  --neutral-input: #f5f5f4;
+  --pri:#1a5fd0; --pri2:#4a86e8; --pri-soft:#e8f0fc; --pri-deep:#123a80;
+  --ok:#188038; --warn:#e8710a; --danger:#d93025;
+  --ink:#1c1f23; --ink2:#5f6368; --ink3:#8b9198;
+  --line:#e3e6ea; --line2:#f1f3f5;
+  --bg:#f4f6f9; --card:#fff; --gray-bar:#c9d3e0; --r:12px;
+  /* 하위 호환 alias */
+  --bg-warm:#edf1f7; --ink-1:#5f6368; --ink-2:#8b9198; --line-soft:#f1f3f5;
+  --primary:#1a5fd0; --primary-soft:#e8f0fc; --primary-deep:#123a80;
+  --positive:#188038; --positive-soft:#e6f4ea;
+  --warning:#e8710a; --warning-soft:#fef7e0;
+  --danger-soft:#fce8e6; --neutral-input:#f4f6f9;
 }
 html, body {
   margin: 0; padding: 0;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
   background: var(--bg);
   color: var(--ink);
-  font-feature-settings: 'tnum' on;
+  font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
-.app { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
+.app { max-width: 1200px; margin: 0 auto; padding: 32px 40px 60px; }
 
 /* ───── HEADER ───── */
 .header {
@@ -56,19 +48,19 @@ html, body {
   gap: 12px;
 }
 .title-text {
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--ink);
   text-decoration: none;
-  transition: color 0.15s;
+  transition: color 0.12s;
 }
-.title-text:hover { color: var(--primary-deep); }
-.title-text:hover span { color: var(--primary-deep); }
-.title-text span { color: var(--primary); }
+.title-text:hover { color: var(--pri-deep); }
+.title-text:hover span { color: var(--pri-deep); }
+.title-text span { color: var(--pri); }
 .title-sub {
   font-size: 12px;
-  color: var(--ink-2);
+  color: var(--ink3);
   letter-spacing: -0.01em;
 }
 
@@ -79,9 +71,10 @@ html, body {
   gap: 0;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r);
   overflow: hidden;
   margin-bottom: 18px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.05);
 }
 @media (max-width: 720px) {
   .budget-strip { grid-template-columns: 1fr; }
@@ -133,7 +126,7 @@ html, body {
   flex-shrink: 0;
 }
 .budget-cell.highlight {
-  background: linear-gradient(135deg, #B8D4F1 0%, #b794f4 100%);
+  background: linear-gradient(135deg, #4a86e8 0%, #1a5fd0 100%);
   color: #fff;
 }
 .budget-cell.highlight .budget-cell-label { color: rgba(255,255,255,0.7); }
@@ -161,9 +154,10 @@ html, body {
 .table-card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r);
   margin-bottom: 18px;
   overflow: hidden;
+  box-shadow: 0 1px 2px rgba(16,24,40,.05);
 }
 .table-card-head {
   padding: 14px 20px;
@@ -173,10 +167,10 @@ html, body {
   align-items: center;
 }
 .table-card-title {
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 700;
   color: var(--ink);
-  letter-spacing: -0.01em;
+  letter-spacing: -.2px;
 }
 .add-buttons {
   display: flex;
@@ -186,31 +180,32 @@ html, body {
 }
 .add-btn {
   border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--ink-1);
+  background: var(--card);
+  color: var(--ink2);
   font-family: inherit;
   font-size: 11px;
-  font-weight: 700;
-  padding: 5px 11px;
-  border-radius: 7px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
   cursor: pointer;
   letter-spacing: -0.01em;
   white-space: nowrap;
+  transition: border-color .12s, background .12s, color .12s;
 }
 .add-btn:hover {
-  background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
+  border-color: var(--pri);
+  background: var(--pri-soft);
+  color: var(--pri);
 }
 .add-btn.primary {
-  background: var(--primary-soft);
-  border-color: var(--primary-soft);
-  color: var(--primary-deep);
+  background: var(--pri-soft);
+  border-color: var(--pri-soft);
+  color: var(--pri-deep);
 }
 .add-btn.primary:hover {
-  background: var(--primary);
+  background: var(--pri);
   color: #fff;
-  border-color: var(--primary);
+  border-color: var(--pri);
 }
 .add-btn.gift {
   background: var(--danger-soft);
@@ -245,13 +240,14 @@ html, body {
 .q-table colgroup .col-margin { width: 140px; }
 .q-table colgroup .col-del { width: 40px; }
 .q-table thead th {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  color: var(--ink-2);
+  color: var(--ink3);
   padding: 10px 14px;
   text-align: right;
-  letter-spacing: -0.01em;
-  background: var(--line-soft);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: #f7f8fa;
   border-bottom: 1px solid var(--line);
   white-space: nowrap;
 }
@@ -263,7 +259,7 @@ html, body {
   font-feature-settings: 'tnum';
 }
 .q-table tbody tr:last-child td { border-bottom: 0; }
-.q-table tbody tr:hover { background: var(--line-soft); }
+.q-table tbody tr:hover { background: rgba(26,95,208,.03); }
 
 /* row label */
 .q-table td.row-label {
@@ -354,7 +350,7 @@ html, body {
 }
 .q-table td.cell-input input:focus {
   background: #fff;
-  box-shadow: 0 0 0 2px var(--primary);
+  box-shadow: 0 0 0 2px rgba(26,95,208,.14);
 }
 .q-table td.cell-input.price input {
   background: var(--primary-soft);
@@ -434,10 +430,10 @@ html, body {
 /* row badge */
 .kind-badge {
   display: inline-block;
-  font-size: 9px;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 99px;
   margin-right: 6px;
   letter-spacing: 0.04em;
   vertical-align: middle;
@@ -533,8 +529,8 @@ tr.gift-tr td .dot {
 
 /* total row */
 tr.total-row td {
-  background: var(--primary-soft);
-  border-top: 2px solid var(--primary);
+  background: #f7f9fc;
+  border-top: 2px solid var(--pri);
   border-bottom: 0;
   padding: 14px;
   font-size: 14px;
@@ -569,10 +565,10 @@ tr.total-row td.cell-input {
 
 .budget-badge {
   display: inline-block;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 3px 8px;
-  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 99px;
   margin-left: 8px;
   letter-spacing: -0.01em;
   vertical-align: middle;
@@ -625,8 +621,9 @@ tr.total-row td.cell-input {
 .bottom-card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 18px 20px;
+  border-radius: var(--r);
+  padding: 22px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.05);
 }
 .bottom-card-title {
   font-size: 12px;
@@ -651,22 +648,22 @@ tr.total-row td.cell-input {
 }
 .kpi {
   padding: 12px 14px;
-  background: var(--bg);
-  border-radius: 9px;
+  background: #f7f9fc;
+  border-radius: 10px;
 }
 .kpi-label {
-  font-size: 10px;
-  color: var(--ink-2);
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  color: var(--ink3);
+  font-weight: 600;
+  letter-spacing: .01em;
   margin-bottom: 3px;
 }
 .kpi-value {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--ink);
-  font-feature-settings: 'tnum';
-  letter-spacing: -0.01em;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--pri);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
 }
 .kpi-value.pos { color: var(--positive); }
 .kpi-value.neg { color: var(--danger); }
@@ -733,8 +730,8 @@ tr.total-row td.cell-input {
   color: var(--ink);
 }
 .tip.diff-suggest {
-  background: var(--bg);
-  border-left-color: var(--ink-2);
+  background: linear-gradient(90deg,#e9f0fd,#f8fbff);
+  border-left-color: var(--pri);
   color: var(--ink);
 }
 .tip.diff-warn {
@@ -1054,11 +1051,25 @@ tr.total-row td.cell-input {
 /* utility */
 .muted { color: var(--ink-2); font-weight: 500; }
 
+/* ───── 패키지 인라인 칩 드롭 ───── */
+.pkg-drop { display: none; padding: 10px 16px 12px; background: var(--line2); border-bottom: 1px solid var(--line); }
+.pkg-drop.open { display: block; }
+.pkg-drop-label { font-size: 11px; color: var(--ink3); margin-bottom: 8px; font-weight: 600; letter-spacing: .02em; }
+.pkg-chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.pkg-chip {
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  padding: 5px 13px; border-radius: 99px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  cursor: pointer; transition: border-color .12s, background .12s, color .12s;
+  white-space: nowrap;
+}
+.pkg-chip:hover { border-color: var(--pri); background: var(--pri-soft); color: var(--pri-deep); }
+.pkg-chip .pkg-chip-price { color: var(--ink3); font-weight: 500; margin-left: 4px; font-size: 11px; }
+
 /* ───── PASSWORD GATE ───── */
 .gate-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
   background: linear-gradient(135deg, var(--bg) 0%, var(--primary-soft) 100%);
   display: flex;
   align-items: center;
@@ -1067,9 +1078,9 @@ tr.total-row td.cell-input {
 }
 .gate-card {
   background: var(--card);
-  border-radius: 14px;
+  border-radius: var(--r);
   padding: 40px 36px;
-  box-shadow: 0 20px 50px rgba(74, 123, 200, 0.15);
+  box-shadow: 0 2px 8px rgba(26,95,208,.10);
   max-width: 400px;
   width: 100%;
   text-align: center;
@@ -1113,8 +1124,6 @@ tr.total-row td.cell-input {
 }
 .gate-hidden { display: none !important; }
 body.gate-locked { overflow: hidden; }
-body.gate-locked .app { display: none !important; }
-body.gate-locked > *:not(.gate-overlay):not(script) { display: none !important; }
 </style>
 </head>
 <body>
@@ -1230,11 +1239,15 @@ body.gate-locked > *:not(.gate-overlay):not(script) { display: none !important; 
       <div class="table-card-title">견적 항목</div>
       <div class="add-buttons">
         <button class="add-btn primary" data-action="add-membership">+ 회원권</button>
-        <button class="add-btn primary" data-action="add-package">+ 패키지</button>
+        <button class="add-btn primary" id="pkgToggleBtn" data-action="toggle-package-drop">+ 패키지</button>
         <button class="add-btn" data-action="add-course-15">+ 단체연수</button>
         <span class="add-btn-divider"></span>
         <button class="add-btn gift" data-action="gift-add">+ 사은품</button>
       </div>
+    </div>
+    <div class="pkg-drop" id="pkgDrop">
+      <div class="pkg-drop-label">추가할 패키지를 선택하세요</div>
+      <div class="pkg-chip-list" id="pkgChipList"></div>
     </div>
     <div style="overflow-x:auto;">
       <table class="q-table" id="mainTable"></table>
@@ -1277,8 +1290,9 @@ const PACKAGES = [
   { id: 'p3', name: '패키지 (Gemini 3개월)',         price: 159000, externals: { 'Gemini 3개월': 112000 } },
   { id: 'p4', name: '패키지 (Chat GPT 3개월)',       price: 170000, externals: { 'Chat GPT 3개월': 149700 } },
   { id: 'p5', name: '패키지 (Chat GPT 2개월)',       price: 130000, externals: { 'Chat GPT 2개월': 99800 } },
-  { id: 'p6', name: '패키지 (다했니 12개월)',         price: 119000, externals: { '다했니 12개월': 66000 } },
+  { id: 'p6', name: '패키지 (다했니 26년 2학기권)',      price: 70000,  externals: { '다했니 26년 2학기권': 33000 } },
   { id: 'p7', name: '패키지 (ZEPQuiz 3개월)',          price: 140000, externals: { 'ZEPQuiz 3개월': 95000 } },
+  { id: 'p8', name: '패키지 (Duolingo MAX 12개월)',    price: 69000,  externals: { 'Duolingo MAX 12개월': 28000 } },
 ];
 
 // ───── STATE ─────
@@ -1707,8 +1721,8 @@ function renderTips() {
       <div class="empty-tip">
         <div class="empty-tip-ico">
           <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="26" r="14" fill="#FBEFD9" stroke="#E8C088" stroke-width="2"/>
-            <path d="M26 42v3M38 42v3M28 49h8" stroke="#E8C088" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="32" cy="26" r="14" fill="#FFF1D8" stroke="#E0A040" stroke-width="2"/>
+            <path d="M26 42v3M38 42v3M28 49h8" stroke="#E0A040" stroke-width="2.5" stroke-linecap="round"/>
             <path d="M32 19v8M28 23h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </div>
@@ -1723,8 +1737,8 @@ function renderTips() {
       <div class="empty-tip">
         <div class="empty-tip-ico">
           <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
-            <rect x="16" y="10" width="32" height="44" rx="4" fill="#faf5ff" stroke="#b794f4" stroke-width="2"/>
-            <path d="M24 22h16M24 30h16M24 38h10" stroke="#b794f4" stroke-width="2" stroke-linecap="round"/>
+            <rect x="16" y="10" width="32" height="44" rx="4" fill="#e8f0fc" stroke="#1a5fd0" stroke-width="2"/>
+            <path d="M24 22h16M24 30h16M24 38h10" stroke="#1a5fd0" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </div>
         총 인원을 입력해 주세요.
@@ -1957,7 +1971,11 @@ function bindEvents() {
     else if (action === 'add-course-30') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 30, price: 85000, headcount: 0 }); render(); };
     else if (action === 'add-course-60') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 60, price: 140000, headcount: 0 }); render(); };
     else if (action === 'add-membership') el.onclick = () => { const m = MEMBERSHIPS[0]; state.rows.push({ id: nid(), kind: 'membership', productId: m.id, price: m.price, headcount: 0 }); render(); };
-    else if (action === 'add-package') el.onclick = () => { const p = PACKAGES[0]; state.rows.push({ id: nid(), kind: 'package', productId: p.id, price: p.price, headcount: 0 }); render(); };
+    else if (action === 'toggle-package-drop') el.onclick = () => {
+      const drop = document.getElementById('pkgDrop');
+      const isOpen = drop.classList.toggle('open');
+      el.textContent = isOpen ? '▲ 패키지' : '+ 패키지';
+    };
 
     else if (action === 'row-hours') {
       const row = findRow(el);
@@ -2077,6 +2095,26 @@ function bindEvents() {
 }
 
 render();
+
+// 패키지 칩 목록 초기화 (한 번만)
+(function initPkgChips() {
+  const list = document.getElementById('pkgChipList');
+  if (!list) return;
+  PACKAGES.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'pkg-chip';
+    btn.innerHTML = `${p.name}<span class="pkg-chip-price">&nbsp;${fmt(p.price)}원</span>`;
+    btn.onclick = () => {
+      state.rows.push({ id: nid(), kind: 'package', productId: p.id, price: p.price, headcount: 0 });
+      const drop = document.getElementById('pkgDrop');
+      drop.classList.remove('open');
+      const toggleBtn = document.getElementById('pkgToggleBtn');
+      if (toggleBtn) toggleBtn.textContent = '+ 패키지';
+      render();
+    };
+    list.appendChild(btn);
+  });
+})();
 </script>
 </body>
 </html>
