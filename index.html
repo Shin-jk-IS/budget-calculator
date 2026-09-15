@@ -65,9 +65,10 @@ html, body {
 }
 
 /* ───── BUDGET STRIP ───── */
-.budget-strip {
+/* ───── KPI BAR ───── */
+.kpi-bar {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   background: var(--card);
   border: 1px solid var(--line);
@@ -76,79 +77,75 @@ html, body {
   margin-bottom: 18px;
   box-shadow: 0 1px 2px rgba(16,24,40,.05);
 }
-@media (max-width: 720px) {
-  .budget-strip { grid-template-columns: 1fr; }
-  .budget-cell { border-right: 0 !important; border-bottom: 1px solid var(--line); }
+@media (max-width: 760px) {
+  .kpi-bar { grid-template-columns: 1fr 1fr; }
+  .kpi-cell:nth-child(2) { border-right: 0; }
+  .kpi-cell:nth-child(1),
+  .kpi-cell:nth-child(2) { border-bottom: 1px solid var(--line); }
 }
-.budget-cell {
-  padding: 14px 18px;
+.kpi-cell {
+  padding: 16px 20px;
   border-right: 1px solid var(--line);
   min-width: 0;
 }
-.budget-cell:last-child { border-right: 0; }
-.budget-cell-label {
-  font-size: 11px;
+.kpi-cell:last-child { border-right: 0; }
+.kpi-cell-label {
+  font-size: 10px;
   font-weight: 700;
-  color: var(--ink-2);
-  letter-spacing: 0.04em;
-  margin-bottom: 4px;
+  color: var(--ink3);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
   white-space: nowrap;
 }
-.budget-cell-input {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  min-width: 0;
-}
-.budget-cell-input input {
-  flex: 1;
-  min-width: 0;
-  width: 100%;
-  border: 0;
-  outline: 0;
-  padding: 0;
-  font-family: inherit;
+.kpi-cell-body { display: flex; align-items: baseline; gap: 3px; min-width: 0; }
+.kpi-cell-value {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--ink);
-  background: transparent;
-  font-feature-settings: 'tnum';
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
 }
-.budget-cell-input input::placeholder {
-  color: #D7CFC0;
-  font-weight: 700;
-}
-.budget-cell-input .suffix {
-  font-size: 14px;
-  color: var(--ink-2);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.budget-cell.highlight {
-  background: linear-gradient(135deg, #4a86e8 0%, #1a5fd0 100%);
-  color: #fff;
-}
-.budget-cell.highlight .budget-cell-label { color: rgba(255,255,255,0.7); }
-.budget-cell.highlight .auto-value {
+.kpi-cell-value input {
+  all: unset;
   font-size: 22px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.02em;
-  font-feature-settings: 'tnum';
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+  cursor: text;
 }
-.budget-cell.highlight .auto-meta {
-  font-size: 11px;
-  color: rgba(255,255,255,0.7);
-  margin-top: 2px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.kpi-cell-value input::placeholder { color: #c8ccd2; }
+.kpi-cell-suffix { font-size: 13px; color: var(--ink3); font-weight: 500; flex-shrink: 0; }
+.kpi-cell-meta { font-size: 11px; color: var(--ink3); margin-top: 3px; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi-cell.kpi-result .kpi-cell-value { color: var(--pri); }
+.kpi-cell.kpi-result.kpi-ok .kpi-cell-value { color: var(--ok); }
+.kpi-cell.kpi-result.kpi-warn .kpi-cell-value { color: var(--warn); }
+.kpi-cell.kpi-result.kpi-over .kpi-cell-value { color: var(--danger); }
+.kpi-cell.kpi-highlight { background: var(--pri); }
+.kpi-cell.kpi-highlight .kpi-cell-label { color: rgba(255,255,255,.65); }
+.kpi-cell.kpi-highlight .kpi-cell-value { color: #fff; }
+.kpi-cell.kpi-highlight .kpi-cell-suffix { color: rgba(255,255,255,.6); }
+.kpi-cell.kpi-highlight .kpi-cell-meta { color: rgba(255,255,255,.6); }
+.kpi-cell.kpi-highlight.kpi-neg .kpi-cell-value { color: #ffd0cc; }
+/* 인사이트 박스 */
+.insight-bar {
+  margin: 0 20px 14px;
+  padding: 11px 15px;
+  background: linear-gradient(90deg, #e9f0fd, #f8fbff);
+  border-left: 3px solid var(--pri);
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+  display: none;
 }
+.insight-bar.visible { display: block; }
 
 /* ───── MAIN TABLE ───── */
 .table-card {
@@ -1071,6 +1068,7 @@ tr.total-row td.cell-input {
   position: fixed;
   inset: 0;
   background: linear-gradient(135deg, var(--bg) 0%, var(--primary-soft) 100%);
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1217,20 +1215,38 @@ body.gate-locked { overflow: hidden; }
     </div>
   </div>
 
-  <div class="budget-strip">
-    <div class="budget-cell">
-      <div class="budget-cell-label">예산 총액</div>
-      <div class="budget-cell-input">
-        <input type="text" inputmode="numeric" placeholder="2,300,000" value="" data-action="budget">
-        <span class="suffix">원</span>
+  <div class="kpi-bar">
+    <div class="kpi-cell">
+      <div class="kpi-cell-label">예산 총액</div>
+      <div class="kpi-cell-body">
+        <div class="kpi-cell-value"><input type="text" inputmode="numeric" placeholder="2,300,000" value="" data-action="budget"></div>
+        <span class="kpi-cell-suffix">원</span>
       </div>
+      <div class="kpi-cell-meta">예산을 입력하세요</div>
     </div>
-    <div class="budget-cell">
-      <div class="budget-cell-label">총 인원</div>
-      <div class="budget-cell-input">
-        <input type="text" inputmode="numeric" placeholder="48" value="" data-action="headcount">
-        <span class="suffix">명</span>
+    <div class="kpi-cell">
+      <div class="kpi-cell-label">총 인원</div>
+      <div class="kpi-cell-body">
+        <div class="kpi-cell-value"><input type="text" inputmode="numeric" placeholder="48" value="" data-action="headcount"></div>
+        <span class="kpi-cell-suffix">명</span>
       </div>
+      <div class="kpi-cell-meta">인원을 입력하세요</div>
+    </div>
+    <div class="kpi-cell kpi-result" id="kpiPayCell">
+      <div class="kpi-cell-label">결제 합계</div>
+      <div class="kpi-cell-body">
+        <div class="kpi-cell-value" id="kpiPay">—</div>
+        <span class="kpi-cell-suffix">원</span>
+      </div>
+      <div class="kpi-cell-meta" id="kpiPayMeta">항목 추가 후 표시</div>
+    </div>
+    <div class="kpi-cell kpi-highlight" id="kpiMarginCell">
+      <div class="kpi-cell-label">마진 합계</div>
+      <div class="kpi-cell-body">
+        <div class="kpi-cell-value" id="kpiMargin">—</div>
+        <span class="kpi-cell-suffix">원</span>
+      </div>
+      <div class="kpi-cell-meta" id="kpiMarginMeta">항목 추가 후 표시</div>
     </div>
   </div>
 
@@ -1238,12 +1254,16 @@ body.gate-locked { overflow: hidden; }
     <div class="table-card-head">
       <div class="table-card-title">견적 항목</div>
       <div class="add-buttons">
-        <button class="add-btn primary" data-action="add-membership">+ 회원권</button>
+        <button class="add-btn primary" id="memToggleBtn" data-action="toggle-membership-drop">+ 회원권</button>
         <button class="add-btn primary" id="pkgToggleBtn" data-action="toggle-package-drop">+ 패키지</button>
         <button class="add-btn" data-action="add-course-15">+ 단체연수</button>
         <span class="add-btn-divider"></span>
         <button class="add-btn gift" data-action="gift-add">+ 사은품</button>
       </div>
+    </div>
+    <div class="pkg-drop" id="memDrop">
+      <div class="pkg-drop-label">추가할 회원권을 선택하세요</div>
+      <div class="pkg-chip-list" id="memChipList"></div>
     </div>
     <div class="pkg-drop" id="pkgDrop">
       <div class="pkg-drop-label">추가할 패키지를 선택하세요</div>
@@ -1252,6 +1272,7 @@ body.gate-locked { overflow: hidden; }
     <div style="overflow-x:auto;">
       <table class="q-table" id="mainTable"></table>
     </div>
+    <div class="insight-bar" id="insightBar"></div>
   </div>
 
   <div class="bottom-grid">
@@ -1446,9 +1467,73 @@ function restoreFocus(f) {
 function render() {
   const f = captureFocus();
   renderTable();
+  renderKpiBar();
+  renderInsight();
   renderTips();
   bindEvents();
   restoreFocus(f);
+}
+
+function renderKpiBar() {
+  const t = calc();
+  const payEl = document.getElementById('kpiPay');
+  const payMeta = document.getElementById('kpiPayMeta');
+  const payCell = document.getElementById('kpiPayCell');
+  const marginEl = document.getElementById('kpiMargin');
+  const marginMeta = document.getElementById('kpiMarginMeta');
+  const marginCell = document.getElementById('kpiMarginCell');
+  if (!payEl) return;
+
+  if (t.total > 0) {
+    payEl.textContent = fmt(t.total);
+    payCell.className = 'kpi-cell kpi-result';
+    if (state.budget > 0) {
+      const diff = state.budget - t.total;
+      if (diff > 500) {
+        payMeta.textContent = `예산 ${fmt(diff)}원 남음`;
+        payCell.classList.add('kpi-ok');
+      } else if (diff < -500) {
+        payMeta.textContent = `예산 ${fmt(-diff)}원 초과`;
+        payCell.classList.add('kpi-over');
+      } else {
+        payMeta.textContent = '예산 일치 ✓';
+        payCell.classList.add('kpi-ok');
+      }
+    } else {
+      payMeta.textContent = `${fmt(t.totalHeadcount)}명 · ${state.rows.length}개 항목`;
+    }
+  } else {
+    payEl.textContent = '—';
+    payMeta.textContent = '항목 추가 후 표시';
+    payCell.className = 'kpi-cell kpi-result';
+  }
+
+  if (t.total > 0) {
+    marginEl.textContent = fmt(Math.abs(t.totalMargin));
+    marginCell.className = 'kpi-cell kpi-highlight' + (t.totalMargin < 0 ? ' kpi-neg' : '');
+    const marginRate = t.total > 0 ? (t.totalMargin / t.total * 100) : 0;
+    marginMeta.textContent = `마진율 ${marginRate.toFixed(1)}%`;
+  } else {
+    marginEl.textContent = '—';
+    marginMeta.textContent = '항목 추가 후 표시';
+    marginCell.className = 'kpi-cell kpi-highlight';
+  }
+}
+
+function renderInsight() {
+  const bar = document.getElementById('insightBar');
+  if (!bar) return;
+  const t = calc();
+  if (!state.budget || t.total === 0) { bar.className = 'insight-bar'; return; }
+  const diff = state.budget - t.total;
+  bar.className = 'insight-bar visible';
+  if (Math.abs(diff) < 500) {
+    bar.innerHTML = '💡 예산과 딱 맞아요!';
+  } else if (diff > 0) {
+    bar.innerHTML = `💡 예산이 <strong>${fmt(diff)}원</strong> 남았어요 — 회원권이나 패키지를 추가해보세요`;
+  } else {
+    bar.innerHTML = `💡 예산을 <strong>${fmt(-diff)}원</strong> 초과했어요 — 할인율을 조정하거나 항목을 줄여보세요`;
+  }
 }
 
 function renderGifts() {
@@ -1479,21 +1564,7 @@ function renderGifts() {
   `).join('');
 }
 
-function renderBudgetAuto() {
-  const el = document.getElementById('perHeadDisplay');
-  if (state.budget > 0 && state.headcount > 0) {
-    const ph = state.budget / state.headcount;
-    el.innerHTML = `
-      <div class="auto-value">${fmt(ph)}원</div>
-      <div class="auto-meta">${fmt(state.budget)}원 ÷ ${state.headcount}명</div>
-    `;
-  } else {
-    el.innerHTML = `
-      <div class="auto-value">— 원</div>
-      <div class="auto-meta">예산·인원 입력 시 표시</div>
-    `;
-  }
-}
+function renderBudgetAuto() {}  // KPI 바로 대체됨
 
 function renderTable() {
   const t = calc();
@@ -1970,7 +2041,15 @@ function bindEvents() {
     else if (action === 'add-course-15') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 15, price: 50000, headcount: 0 }); render(); };
     else if (action === 'add-course-30') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 30, price: 85000, headcount: 0 }); render(); };
     else if (action === 'add-course-60') el.onclick = () => { state.rows.push({ id: nid(), kind: 'course', hours: 60, price: 140000, headcount: 0 }); render(); };
-    else if (action === 'add-membership') el.onclick = () => { const m = MEMBERSHIPS[0]; state.rows.push({ id: nid(), kind: 'membership', productId: m.id, price: m.price, headcount: 0 }); render(); };
+    else if (action === 'toggle-membership-drop') el.onclick = () => {
+      const drop = document.getElementById('memDrop');
+      const isOpen = drop.classList.toggle('open');
+      el.textContent = isOpen ? '▲ 회원권' : '+ 회원권';
+      // 패키지 드롭은 닫기
+      document.getElementById('pkgDrop').classList.remove('open');
+      const pb = document.getElementById('pkgToggleBtn');
+      if (pb) pb.textContent = '+ 패키지';
+    };
     else if (action === 'toggle-package-drop') el.onclick = () => {
       const drop = document.getElementById('pkgDrop');
       const isOpen = drop.classList.toggle('open');
@@ -2096,24 +2175,42 @@ function bindEvents() {
 
 render();
 
-// 패키지 칩 목록 초기화 (한 번만)
-(function initPkgChips() {
-  const list = document.getElementById('pkgChipList');
-  if (!list) return;
-  PACKAGES.forEach(p => {
-    const btn = document.createElement('button');
-    btn.className = 'pkg-chip';
-    btn.innerHTML = `${p.name}<span class="pkg-chip-price">&nbsp;${fmt(p.price)}원</span>`;
-    btn.onclick = () => {
-      state.rows.push({ id: nid(), kind: 'package', productId: p.id, price: p.price, headcount: 0 });
-      const drop = document.getElementById('pkgDrop');
-      drop.classList.remove('open');
-      const toggleBtn = document.getElementById('pkgToggleBtn');
-      if (toggleBtn) toggleBtn.textContent = '+ 패키지';
-      render();
-    };
-    list.appendChild(btn);
-  });
+// 칩 목록 초기화 (한 번만)
+(function initChips() {
+  // 회원권 칩
+  const memList = document.getElementById('memChipList');
+  if (memList) {
+    MEMBERSHIPS.forEach(m => {
+      const btn = document.createElement('button');
+      btn.className = 'pkg-chip';
+      btn.innerHTML = `${m.name}<span class="pkg-chip-price">&nbsp;${fmt(m.price)}원</span>`;
+      btn.onclick = () => {
+        state.rows.push({ id: nid(), kind: 'membership', productId: m.id, price: m.price, headcount: 0 });
+        document.getElementById('memDrop').classList.remove('open');
+        const tb = document.getElementById('memToggleBtn');
+        if (tb) tb.textContent = '+ 회원권';
+        render();
+      };
+      memList.appendChild(btn);
+    });
+  }
+  // 패키지 칩
+  const pkgList = document.getElementById('pkgChipList');
+  if (pkgList) {
+    PACKAGES.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'pkg-chip';
+      btn.innerHTML = `${p.name}<span class="pkg-chip-price">&nbsp;${fmt(p.price)}원</span>`;
+      btn.onclick = () => {
+        state.rows.push({ id: nid(), kind: 'package', productId: p.id, price: p.price, headcount: 0 });
+        document.getElementById('pkgDrop').classList.remove('open');
+        const tb = document.getElementById('pkgToggleBtn');
+        if (tb) tb.textContent = '+ 패키지';
+        render();
+      };
+      pkgList.appendChild(btn);
+    });
+  }
 })();
 </script>
 </body>
